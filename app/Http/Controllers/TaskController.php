@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -10,32 +11,36 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $projectId)
     {
-        $tasks = Task::query()->orderBy('order', 'asc')->orderBy('created_at', 'desc')->get();
+        $project = Project::find($projectId);
+        $tasks = Task::where('project_id', $projectId)->orderBy('order', 'asc')->orderBy('created_at', 'desc')->get();
 
-        return view('home', ['tasks' => $tasks]);
+        return view('task.home', ['project' => $project, 'tasks' => $tasks]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(string $projectId)
     {
-        return view('create');
+        return view('task.create', ['projectId' => $projectId]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, string $projectId)
     {
         $data = $request->validate([
             'title' => ['required', 'string'],
             'description' => ['string']
         ]);
 
-        $task = Task::create($data);
+        $input = $request->all();
+        $input['project_id'] = $projectId;
+
+        $task = Task::create($input);
 
         return to_route('task.show', $task->id);
     }
@@ -47,7 +52,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
 
-        return view('show', ['task' => $task]);
+        return view('task.show', ['task' => $task]);
     }
 
     /**
@@ -57,7 +62,7 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
 
-        return view('edit', ['task' => $task]);
+        return view('task.edit', ['task' => $task]);
     }
 
     /**
@@ -82,8 +87,9 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         $task = Task::find($id);
+        $projectId = $task->project_id;
         $task->delete();
 
-        return to_route('task.index');
+        return to_route('task.index', $projectId);
     }
 }

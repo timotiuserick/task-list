@@ -3,6 +3,7 @@
 		<div class="row justify-content-md-center">
 			<div class="col-md-4 text-center">
 				<h1>View Task</h1>
+				Updated at {{ $task->updated_at }}
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
@@ -20,7 +21,7 @@
 
 				<div class="form-group row mb-1">
 					<div class="col-sm-6">
-						<a href="{{ route('task.index') }}" class="form-control btn btn-warning">Back</a>
+						<a href="{{ route('task.index', $task->project_id) }}" class="form-control btn btn-warning">Back</a>
 					</div>
 				</div>
 			</div>

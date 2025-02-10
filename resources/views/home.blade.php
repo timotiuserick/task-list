@@ -2,23 +2,23 @@
 	<div class="container">
 		<div class="row justify-content-md-center">
 			<div class="col-md-4 text-center">
-				<h1>Task List</h1>
-				<a href="{{ route('task.create') }}" class="btn btn-success">
-					New Task
+				<h1>Project List</h1>
+				<a href="{{ route('project.create') }}" class="btn btn-success">
+					New Project
 				</a>
 			</div>
 		</div>
 		<div class="row justify-content-md-center">
 			<div class="col-md-6 text-center">
-				@foreach ($tasks as $task)
+				@foreach ($projects as $project)
 					<div class="row justify-content-md-center mt-4 border">
 						<div class="col-md-6 align-self-center">
-							{{ $task->title }}
+							{{ $project->title }}
 						</div>
 						<div class="col-md-6 text-center">
-							<a href="{{ route('task.show', $task->id) }}" class="btn btn-success">View</a>
-							<a href="{{ route('task.edit', $task->id) }}" class="btn btn-warning">Edit</a>
-							<form action="{{ route('task.destroy', $task->id) }}" method="POST" class="d-inline">
+							<a href="{{ route('task.index', $project->id) }}" class="btn btn-info">View Tasks</a>
+							<a href="{{ route('project.edit', $project->id) }}" class="btn btn-warning">Edit</a>
+							<form action="{{ route('project.destroy', $project->id) }}" method="POST" class="d-inline">
 								@csrf
 								@method('DELETE')
 								<button class="btn btn-danger">Delete</button>
