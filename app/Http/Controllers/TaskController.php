@@ -14,7 +14,7 @@ class TaskController extends Controller
     public function index(string $projectId)
     {
         $project = Project::find($projectId);
-        $tasks = Task::where('project_id', $projectId)->orderBy('order', 'asc')->orderBy('created_at', 'desc')->get();
+        $tasks = Task::where('project_id', $projectId)->orderBy('order', 'asc')->orderBy('created_at', 'asc')->get();
 
         return view('task.home', ['project' => $project, 'tasks' => $tasks]);
     }
@@ -33,8 +33,7 @@ class TaskController extends Controller
     public function store(Request $request, string $projectId)
     {
         $data = $request->validate([
-            'title' => ['required', 'string'],
-            'description' => ['string']
+            'title' => ['required']
         ]);
 
         $input = $request->all();
@@ -71,8 +70,7 @@ class TaskController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            'title' => ['required', 'string'],
-            'description' => ['string']
+            'title' => ['required']
         ]);
 
         $task = Task::find($id);
