@@ -1,66 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+﻿# Deploying Task List
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Task List is using Laravel 11 so for full compatibility please consider using PHP >= 8. Below is instruction how to deploy this app in two conditions.
+1. PC that already setup Laravel 11.
+2. PC that doesn't have Laravel yet or fresh installation.
 
-## About Laravel
+# Already setup Laravel
+1. Extract "task-list.zip" to any folder.
+2. Open the extracted folder.
+3. Open ".env" file.
+4. Adjust the database configuration fields according to database settings in user's PC.
+	- DB_CONNECTION
+	- DB_HOST
+	- DB_PORT
+	- DB_DATABASE
+	- DB_USERNAME
+	- DB_PASSWORD
+5. Open MySQL database software (like phpMyAdmin or MySQL Workbench) and create database with same settings as the above ".env" file.
+6. Open cmd or terminal.
+7. Go to the extracted folder in cmd or terminal.
+8. Run "php artisan migrate:refresh --seed".
+9. See database and check if initial/dummy data already created or no.
+	- If no, user can also import the database provided inside "task-list.zip", the filename is  "task_list.sql".
+11. After initial data already imported, back to cmd/terminal and run "php artisan serve".
+12. Open "localhost:8000" in Browser.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# No Laravel yet (Windows)
+1. Download and install Xampp or Lampp newest version that's using PHP 8 here https://www.apachefriends.org
+2. After that, open "xampp-control.exe" file, usually it's in "C:\xampp\xampp-control.exe".
+	- Click "Start" button in Apache row to start Apache service.
+	- Click "Start" button in MySQL row to start MySQL service.
+		- If there's some error, please try to browse it because the reason may be different for each person. Don't hesitate to contact me!
+3. After both service already started, open "localhost/phpmyadmin" in Browser.
+4. Create new database using any name. We will use "task-list-db" as an example in this guide.
+5. Import the database provided inside "task-list.zip", the filename is  "task_list.sql"
+	- Make sure the import is successful so tables and its dummy data are created successfully.
+7. Extract "task-list.zip" to any folder in "C:\xampp\htdocs". THIS IS IMPORTANT! For example we will use "task-list" as folder name.
+8. Open the extracted folder. For example the targetted folder will be "C:\xampp\htdocs\task-list".
+9. Open ".env" file.
+10. Change "DB_DATABASE" value to same database name used in step no 4. For example put "task-list" here so it will become "DB_DATABASE=task-list-db".
+11. Open "localhost/{extracted_folder_name/public}" in Browser. Using the provided example before, it will be "localhost/task-list/public".
