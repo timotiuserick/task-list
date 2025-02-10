@@ -19,7 +19,8 @@ class TaskFactory extends Factory
         return [
             'project_id' => 1,
             'title' => fake()->realText(20),
-            'description' => fake()->realText(500)
+            'description' => fake()->realText(500),
+            'order' => 1
         ];
     }
 }

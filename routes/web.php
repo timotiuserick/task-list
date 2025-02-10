@@ -15,6 +15,7 @@ Route::delete('/projects/{id}', [HomeController::class, 'destroy'])->name('proje
 Route::get('/projects/{projectId}/tasks', [TaskController::class, 'index'])->name('task.index');
 Route::get('/projects/{projectId}/tasks/create', [TaskController::class, 'create'])->name('task.create');
 Route::post('/projects/{projectId}/tasks', [TaskController::class, 'store'])->name('task.store');
+Route::post('/projects/{projectId}/tasks/sort', [TaskController::class, 'sort'])->name('task.sort');
 Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('task.show');
 Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('task.edit');
 Route::post('/tasks/{id}', [TaskController::class, 'update'])->name('task.update');

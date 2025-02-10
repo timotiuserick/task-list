@@ -14,9 +14,15 @@ class TaskController extends Controller
     public function index(string $projectId)
     {
         $project = Project::find($projectId);
-        $tasks = Task::where('project_id', $projectId)->orderBy('order', 'asc')->orderBy('created_at', 'asc')->get();
+        $tasks = Task::where('project_id', $projectId)
+            ->orderBy('order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-        return view('task.home', ['project' => $project, 'tasks' => $tasks]);
+        return view('task.home', [
+            'project' => $project,
+            'tasks' => $tasks
+        ]);
     }
 
     /**
@@ -39,9 +45,78 @@ class TaskController extends Controller
         $input = $request->all();
         $input['project_id'] = $projectId;
 
+        // Assign priority level
+        $largestPriorityTask = Task::where('project_id', $projectId)->orderBy('order', 'desc')->first();
+        if ($largestPriorityTask)
+        {
+            $largestPriorityNumber = $largestPriorityTask->order;
+            $input['order'] = $largestPriorityNumber + 1;
+        }
+        else
+        {
+            $input['order'] = 1;
+        }
+
         $task = Task::create($input);
 
         return to_route('task.show', $task->id);
+    }
+
+    /**
+     * Sort resources.
+     */
+    public function sort(Request $request, string $projectId)
+    {
+        $data = $request->validate([
+            'old_order' => ['required'],
+            'new_order' => ['required']
+        ]);
+
+        $input = $request->all();
+        $oldPriorityNumber = $input['old_order'];
+        $newPriorityNumber = $input['new_order'];
+
+        // Get the targetted task
+        $task = Task::where('project_id', $projectId)->where('order', $oldPriorityNumber)->first();
+
+        // Get & update the affected tasks by this sorting
+        $affectedTasks = [];
+
+        if ($newPriorityNumber > $oldPriorityNumber)
+        {
+            $affectedTasks = Task::where('project_id', $projectId)
+                ->where('order', '>', $oldPriorityNumber)
+                ->where('order', '<=', $newPriorityNumber)
+                ->get();
+
+            foreach ($affectedTasks as $tempTask)
+            {
+                $tempTask->order -= 1;
+                $tempTask->save();
+            }
+        }
+        else if ($newPriorityNumber < $oldPriorityNumber)
+        {
+            $affectedTasks = Task::where('project_id', $projectId)
+                ->where('order', '>=', $newPriorityNumber)
+                ->where('order', '<', $oldPriorityNumber)
+                ->get();
+
+            foreach ($affectedTasks as $tempTask)
+            {
+                $tempTask->order += 1;
+                $tempTask->save();
+            }
+        }
+        else
+        {
+            return to_route('task.index', $projectId);
+        }
+
+        $task->order = $newPriorityNumber;
+        $task->save();
+
+        return to_route('task.index', $projectId);
     }
 
     /**
@@ -73,8 +148,10 @@ class TaskController extends Controller
             'title' => ['required']
         ]);
 
+        $input = $request->all();
+
         $task = Task::find($id);
-        $task->update($data);
+        $task->update($input);
 
         return to_route('task.show', $task->id);
     }
@@ -86,6 +163,20 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         $projectId = $task->project_id;
+        $priorityNumber = $task->order;
+
+        // Increase priority of tasks below the deleted one to remove the gap
+        $affectedTasks = Task::where('project_id', $projectId)->where('order', '>', $priorityNumber)->get();
+
+        if ($affectedTasks)
+        {
+            foreach ($affectedTasks as $tempTask)
+            {
+                $tempTask->order -= 1;
+                $tempTask->save();
+            }
+        }
+
         $task->delete();
 
         return to_route('task.index', $projectId);
